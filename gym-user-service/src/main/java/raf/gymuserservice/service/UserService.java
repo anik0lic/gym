@@ -11,5 +11,5 @@ public interface UserService {
 
 //    DiscountDto findDiscount(Long id);
 
-    TokenResponseDto login(TokenRequestDto tokenRequestDto) throws NotFoundException;
+    TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

@@ -10,6 +10,7 @@ import raf.gymuserservice.domain.Manager;
 import raf.gymuserservice.domain.User;
 import raf.gymuserservice.dto.*;
 import raf.gymuserservice.mapper.UserMapper;
+import raf.gymuserservice.repository.AdminRepository;
 import raf.gymuserservice.repository.ClientRepository;
 import raf.gymuserservice.repository.ManagerRepository;
 import raf.gymuserservice.repository.UserRepository;
@@ -22,27 +23,27 @@ import io.jsonwebtoken.Jwts;
 @Transactional
 public class UserServiceImpl implements UserService {
     private TokenService tokenService;
-    private ManagerRepository managerRepository;
+    private AdminRepository adminRepository;
     private UserMapper userMapper;
 
-    public UserServiceImpl(TokenService tokenService, ManagerRepository managerRepository, UserMapper userMapper) {
+    public UserServiceImpl(TokenService tokenService, AdminRepository adminRepository, UserMapper userMapper) {
         this.tokenService = tokenService;
-        this.managerRepository = managerRepository;
+        this.adminRepository = adminRepository;
         this.userMapper = userMapper;
     }
 
 
     @Override
     public Page<UserDto> findAll(Pageable pageable) {
-        return managerRepository.findAll(pageable)
+        return adminRepository.findAll(pageable)
                 .map(userMapper::userToUserDto);
     }
 
     @Override
-    public TokenResponseDto login(TokenRequestDto tokenRequestDto) throws NotFoundException {
-        User user = managerRepository
+    public TokenResponseDto login(TokenRequestDto tokenRequestDto){
+        User user = adminRepository
                 .findUserByUsernameAndPassword(tokenRequestDto.getUsername(), tokenRequestDto.getPassword())
-                .orElseThrow(() -> new NotFoundException(String
+                .orElseThrow(() -> new raf.gymuserservice.exceptions.NotFoundException(String
                         .format("User with username: %s and password: %s not found.", tokenRequestDto.getUsername(),
                                 tokenRequestDto.getPassword())));
         Claims claims = Jwts.claims();
