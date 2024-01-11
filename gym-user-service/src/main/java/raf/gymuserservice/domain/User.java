@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,7 +21,7 @@ public class User {
     private String firstName;
     private String lastName;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     @ManyToOne(optional = false)
     private Role role;
 }

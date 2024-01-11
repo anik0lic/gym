@@ -1,14 +1,14 @@
 package raf.gymuserservice.runner;
 
-import raf.gymuserservice.domain.Admin;
-import raf.gymuserservice.domain.Role;
-import raf.gymuserservice.domain.User;
-import raf.gymuserservice.repository.AdminRepository;
-import raf.gymuserservice.repository.RoleRepository;
-import raf.gymuserservice.repository.UserRepository;
+import raf.gymuserservice.domain.*;
+import raf.gymuserservice.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Profile({"default"})
 @Component
@@ -16,10 +16,14 @@ public class TestDataRunner implements CommandLineRunner {
 
     private RoleRepository roleRepository;
     private AdminRepository adminRepository;
+    private ClientRepository clientRepository;
+    private ManagerRepository managerRepository;
 
-    public TestDataRunner(RoleRepository roleRepository, AdminRepository adminRepository) {
+    public TestDataRunner(RoleRepository roleRepository, AdminRepository adminRepository, ClientRepository clientRepository, ManagerRepository managerRepository) {
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
+        this.clientRepository = clientRepository;
+        this.managerRepository = managerRepository;
     }
 
     @Override
@@ -39,5 +43,30 @@ public class TestDataRunner implements CommandLineRunner {
         admin.setPassword("admin");
         admin.setRole(roleAdmin);
         adminRepository.save(admin);
+
+        //Insert clients
+        Client client = new Client();
+        client.setEmail("client@client.com");
+        client.setUsername("client");
+        client.setPassword("client");
+        client.setFirstName("Client");
+        client.setLastName("Client");
+        client.setDateOfBirth(LocalDate.parse("01/02/1980", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        client.setRole(roleClient);
+        client.setNumberOfReservations(0);
+        clientRepository.save(client);
+
+        //Insert Manager
+        Manager manager = new Manager();
+        manager.setEmail("manager@manager.com");
+        manager.setUsername("manager");
+        manager.setPassword("manager");
+        manager.setFirstName("Manager");
+        manager.setLastName("Manager");
+        manager.setDateOfBirth(LocalDate.parse("02/03/1981", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        manager.setRole(roleManager);
+        manager.setStartDate(LocalDate.parse("10/07/1999", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        manager.setGym("Sala01");
+        managerRepository.save(manager);
     }
 }

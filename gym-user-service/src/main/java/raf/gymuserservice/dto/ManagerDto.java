@@ -3,6 +3,7 @@ package raf.gymuserservice.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -13,6 +14,6 @@ public class ManagerDto {
     private String firstName;
     private String lastName;
     private String username;
-    private Date startDate;
+    private LocalDate startDate;
     private String gym;
 }
