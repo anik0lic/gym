@@ -34,7 +34,7 @@ public class AppointmentController {
                             "Default sort order is ascending. " +
                             "Multiple sort criteria are supported.")})
     @GetMapping
-    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_USER", "ROLE_MANAGER"})
     public ResponseEntity<Page<AppointmentDto>> findAll(@RequestHeader("Authorization") String authorization, @ApiIgnore Pageable pageable){
         return new ResponseEntity<>(appointmentService.findAll(pageable), HttpStatus.OK);
     }
@@ -43,5 +43,12 @@ public class AppointmentController {
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<AppointmentDto> add(@RequestHeader("Authorization") String authorization, @RequestBody @Valid AppointmentCreateDto appointmentCreateDto){
         return new ResponseEntity<>(appointmentService.add(appointmentCreateDto), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<?> delete (@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        appointmentService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

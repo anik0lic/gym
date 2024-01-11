@@ -2,8 +2,10 @@ package raf.gymreservationservice.mapper;
 
 import org.springframework.stereotype.Component;
 import raf.gymreservationservice.domain.Appointment;
+import raf.gymreservationservice.domain.GymTraining;
 import raf.gymreservationservice.dto.AppointmentCreateDto;
 import raf.gymreservationservice.dto.AppointmentDto;
+import raf.gymreservationservice.dto.GymTrainingDto;
 import raf.gymreservationservice.exceptions.NotFoundException;
 import raf.gymreservationservice.repository.GymTrainingRepository;
 
@@ -24,6 +26,7 @@ public class AppointmentMapper {
         appointmentDto.setStartTime(appointment.getStartTime());
         appointmentDto.setEndTime(appointment.getEndTime());
         appointmentDto.setGymTrainingDto(gymTrainingMapper.gymTrainingToGymTrainingDto(appointment.getGymTraining()));
+        appointmentDto.setCapacity(gymTrainingMapper.gymTrainingToGymTrainingDto(appointment.getGymTraining()).getGymDto().getCapacity());
         return appointmentDto;
     }
 
@@ -32,9 +35,11 @@ public class AppointmentMapper {
         appointment.setDate(appointmentCreateDto.getDate());
         appointment.setStartTime(appointmentCreateDto.getStartTime());
         appointment.setEndTime(appointmentCreateDto.getEndTime());
-        appointment.setGymTraining(gymTrainingRepository.findById(appointmentCreateDto.getGymTrainingDto())
+        GymTraining gymTraining = gymTrainingRepository.findById(appointmentCreateDto.getGymTraining())
                 .orElseThrow(() -> new NotFoundException(String
-                        .format("Gym with id: %d does not exists.", appointmentCreateDto.getGymTrainingDto()))));
+                        .format("Gym with id: %d does not exists.", appointmentCreateDto.getGymTraining())));
+        appointment.setGymTraining(gymTraining);
+        appointment.setCapacity(gymTraining.getGym().getCapacity());
         return appointment;
     }
 }

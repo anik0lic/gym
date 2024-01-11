@@ -43,14 +43,28 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void addReservation(ReservationCreateDto reservationCreateDto) {
         Appointment appointment = appointmentRepository.findById(reservationCreateDto.getAppointmentId()).get();
+        if(appointment.getCapacity() == 0){
+            return;
+        }
+        appointment.setCapacity(appointment.getCapacity() - 1);
 
         ResponseEntity<DiscountDto> discountDtoResponseEntity = userServiceRestTemplate.exchange("/client/" +
                 reservationCreateDto.getUserId() + "/discount", HttpMethod.GET, null, DiscountDto.class);
+
+//        ResponseEntity<Void> putResponseEntity = userServiceRestTemplate.exchange("/client/" +
+//                reservationCreateDto.getUserId(), HttpMethod.PUT, null, Void.class);
 
         BigDecimal price = appointment.getGymTraining().getPrice().divide(BigDecimal.valueOf(100))
                 .multiply(BigDecimal.valueOf(100 - Objects.requireNonNull(discountDtoResponseEntity.getBody()).getDiscount()));
 
         Reservation reservation = new Reservation(appointment, reservationCreateDto.getUserId(), price);
         reservationRepository.save(reservation);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Reservation reservation = reservationRepository.findById(id).get();
+        reservation.getAppointment().setCapacity(reservation.getAppointment().getCapacity() + 1);
+        reservationRepository.deleteById(id);
     }
 }

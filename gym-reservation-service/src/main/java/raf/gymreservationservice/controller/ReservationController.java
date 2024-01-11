@@ -46,4 +46,11 @@ public class ReservationController {
         reservationService.addReservation(reservationCreateDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<?> delete (@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        reservationService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

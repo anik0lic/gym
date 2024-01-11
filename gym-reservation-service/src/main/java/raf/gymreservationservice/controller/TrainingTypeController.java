@@ -47,4 +47,11 @@ public class TrainingTypeController {
     public ResponseEntity<TrainingTypeDto> add(@RequestHeader("Authorization") String authorization, @RequestBody @Valid TrainingTypeCreateDto trainingTypeCreateDto){
         return new ResponseEntity<>(trainingTypeService.add(trainingTypeCreateDto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<?> delete (@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        trainingTypeService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

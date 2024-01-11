@@ -33,4 +33,9 @@ public class GymTrainingServiceImpl implements GymTrainingService {
         gymTrainingRepository.save(gymTraining);
         return gymTrainingMapper.gymTrainingToGymTrainingDto(gymTraining);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        gymTrainingRepository.deleteById(id);
+    }
 }

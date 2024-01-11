@@ -32,4 +32,9 @@ public class GymServiceImpl implements GymService {
         gymRepository.save(gym);
         return gymMapper.gymToGymDto(gym);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        gymRepository.deleteById(id);
+    }
 }

@@ -8,4 +8,5 @@ import raf.gymreservationservice.dto.TrainingTypeDto;
 public interface TrainingTypeService {
     Page<TrainingTypeDto> findAll(Pageable pageable);
     TrainingTypeDto add(TrainingTypeCreateDto trainingTypeCreateDto);
+    void deleteById(Long id);
 }

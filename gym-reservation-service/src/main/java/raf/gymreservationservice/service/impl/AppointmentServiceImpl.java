@@ -33,4 +33,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.save(appointment);
         return appointmentMapper.appointmentToAppointmentDto(appointment);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        appointmentRepository.deleteById(id);
+    }
 }

@@ -33,4 +33,9 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
         trainingTypeRepository.save(trainingType);
         return trainingTypeMapper.trainingTypeToTrainingTypeDto(trainingType);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        trainingTypeRepository.deleteById(id);
+    }
 }

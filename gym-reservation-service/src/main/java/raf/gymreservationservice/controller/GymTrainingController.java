@@ -46,4 +46,11 @@ public class GymTrainingController {
     public ResponseEntity<GymTrainingDto> add(@RequestHeader("Authorization") String authorization, @RequestBody @Valid GymTrainingCreateDto gymTrainingCreateDto){
         return new ResponseEntity<>(gymTrainingService.add(gymTrainingCreateDto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<?> delete (@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        gymTrainingService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

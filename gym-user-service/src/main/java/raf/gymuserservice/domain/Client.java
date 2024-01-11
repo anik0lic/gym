@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 public class Client extends User{
     private Integer numberOfReservations;
+    private Boolean ban;
 
     @Override
     public String toString() {

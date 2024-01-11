@@ -14,6 +14,7 @@ import raf.gymreservationservice.repository.TrainingTypeRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -58,9 +59,10 @@ public class TestDataRunner implements CommandLineRunner {
         //Insert appointment
         Appointment appointment = new Appointment();
         appointment.setDate(LocalDate.parse("21/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        appointment.setStartTime(LocalTime.parse("11:00", DateTimeFormatter.ofPattern("HH:mm")));
-        appointment.setEndTime(LocalTime.parse("13:00", DateTimeFormatter.ofPattern("HH:mm")));
+        appointment.setStartTime("11:00");
+        appointment.setEndTime("13:00");
         appointment.setGymTraining(gymTraining);
+        appointment.setCapacity(gymTraining.getGym().getCapacity());
         appointmentRepository.save(appointment);
     }
 }
