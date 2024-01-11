@@ -17,7 +17,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/manager")
 public class ManagerController {
-//    private ClientService clientService;
     private ManagerService managerService;
 
     public ManagerController(ManagerService managerService) {
@@ -37,11 +36,6 @@ public class ManagerController {
     public ResponseEntity<Page<UserDto>> getAllManagers(@RequestHeader("Authorization") String authorization, Pageable pageable) {
         return new ResponseEntity<>(managerService.findAllManagers(pageable), HttpStatus.OK);
     }
-
-//    @GetMapping("/{id}/discount")
-//    public ResponseEntity<DiscountDto> getDiscount(@PathVariable("id") Long id) {
-//        return new ResponseEntity<>(userService.findDiscount(id), HttpStatus.OK);
-//    }
 
     @ApiOperation(value = "Register manager")
     @PostMapping

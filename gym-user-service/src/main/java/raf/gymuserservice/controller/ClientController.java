@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.gymuserservice.dto.ClientCreateDto;
 import raf.gymuserservice.dto.ClientDto;
+import raf.gymuserservice.dto.DiscountDto;
 import raf.gymuserservice.dto.UserDto;
 import raf.gymuserservice.secutiry.CheckSecurity;
 import raf.gymuserservice.service.ClientService;
@@ -38,6 +39,11 @@ public class ClientController {
     @CheckSecurity(roles = {"ROLE_ADMIN"})
     public ResponseEntity<Page<UserDto>> getAllClients(@RequestHeader("Authorization") String authorization, Pageable pageable) {
         return new ResponseEntity<>(clientService.findAllClients(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/discount")
+    public ResponseEntity<DiscountDto> getDiscount(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(clientService.findDiscount(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Register client")

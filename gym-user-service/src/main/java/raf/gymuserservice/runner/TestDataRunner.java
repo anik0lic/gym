@@ -13,17 +13,20 @@ import java.time.format.DateTimeFormatter;
 @Profile({"default"})
 @Component
 public class TestDataRunner implements CommandLineRunner {
-
     private RoleRepository roleRepository;
     private AdminRepository adminRepository;
     private ClientRepository clientRepository;
     private ManagerRepository managerRepository;
+    private UserStatusRepository userStatusRepository;
 
-    public TestDataRunner(RoleRepository roleRepository, AdminRepository adminRepository, ClientRepository clientRepository, ManagerRepository managerRepository) {
+    public TestDataRunner(RoleRepository roleRepository, AdminRepository adminRepository,
+                          ClientRepository clientRepository, ManagerRepository managerRepository,
+                          UserStatusRepository userStatusRepository) {
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.clientRepository = clientRepository;
         this.managerRepository = managerRepository;
+        this.userStatusRepository = userStatusRepository;
     }
 
     @Override
@@ -35,6 +38,11 @@ public class TestDataRunner implements CommandLineRunner {
         roleRepository.save(roleAdmin);
         roleRepository.save(roleClient);
         roleRepository.save(roleManager);
+
+        //Insert user status
+        userStatusRepository.save(new UserStatus(0, 5, 0));
+        userStatusRepository.save(new UserStatus(6, 10, 10));
+        userStatusRepository.save(new UserStatus(11, 20, 20));
 
         //Insert admin
         User admin = new Admin();
@@ -53,7 +61,7 @@ public class TestDataRunner implements CommandLineRunner {
         client.setLastName("Client");
         client.setDateOfBirth(LocalDate.parse("01/02/1980", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         client.setRole(roleClient);
-        client.setNumberOfReservations(0);
+        client.setNumberOfReservations(7);
         clientRepository.save(client);
 
         //Insert Manager
