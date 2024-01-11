@@ -11,7 +11,5 @@ public interface UserService {
 
 //    DiscountDto findDiscount(Long id);
 
-    UserDto add(UserCreateDto userCreateDto);
-    ClientDto addClient(ClientCreateDto clientCreateDto);
     TokenResponseDto login(TokenRequestDto tokenRequestDto) throws NotFoundException;
 }

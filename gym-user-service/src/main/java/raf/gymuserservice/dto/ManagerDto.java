@@ -7,11 +7,12 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ClientDto {
+public class ManagerDto {
     private Long id;
     private String email;
     private String firstName;
     private String lastName;
     private String username;
-    private Integer numberOfReservations;
+    private Date startDate;
+    private String gym;
 }

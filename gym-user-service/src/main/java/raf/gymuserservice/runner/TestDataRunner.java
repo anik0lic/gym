@@ -1,7 +1,9 @@
 package raf.gymuserservice.runner;
 
+import raf.gymuserservice.domain.Admin;
 import raf.gymuserservice.domain.Role;
 import raf.gymuserservice.domain.User;
+import raf.gymuserservice.repository.AdminRepository;
 import raf.gymuserservice.repository.RoleRepository;
 import raf.gymuserservice.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,25 +15,29 @@ import org.springframework.stereotype.Component;
 public class TestDataRunner implements CommandLineRunner {
 
     private RoleRepository roleRepository;
-    private UserRepository userRepository;
+    private AdminRepository adminRepository;
 
-    public TestDataRunner(RoleRepository roleRepository, UserRepository userRepository) {
+    public TestDataRunner(RoleRepository roleRepository, AdminRepository adminRepository) {
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Role roleUser = new Role("ROLE_CLIENT");
+        //Insert roles
         Role roleAdmin = new Role("ROLE_ADMIN");
-        roleRepository.save(roleUser);
+        Role roleClient = new Role("ROLE_CLIENT");
+        Role roleManager = new Role("ROLE_MANAGER");
         roleRepository.save(roleAdmin);
+        roleRepository.save(roleClient);
+        roleRepository.save(roleManager);
+
         //Insert admin
-        User admin = new User();
+        User admin = new Admin();
         admin.setEmail("admin@gmail.com");
         admin.setUsername("admin");
         admin.setPassword("admin");
         admin.setRole(roleAdmin);
-        userRepository.save(admin);
+        adminRepository.save(admin);
     }
 }

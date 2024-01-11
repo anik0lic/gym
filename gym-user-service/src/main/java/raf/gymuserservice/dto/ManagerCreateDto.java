@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class ClientCreateDto {
+public class ManagerCreateDto {
     @Email
     private String email;
     @NotBlank
@@ -24,5 +24,8 @@ public class ClientCreateDto {
     private String password;
     @NotNull
     private Date dateOfBirth;
-
+    @NotNull
+    private Date startDate;
+    @NotBlank
+    private String gym;
 }

@@ -1,29 +1,27 @@
 package raf.gymuserservice.controller;
 
+import io.swagger.annotations.ApiOperation;
+import raf.gymuserservice.dto.*;
+import raf.gymuserservice.secutiry.CheckSecurity;
+import raf.gymuserservice.service.ManagerService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import raf.gymuserservice.dto.TokenRequestDto;
-import raf.gymuserservice.dto.TokenResponseDto;
-import raf.gymuserservice.dto.UserDto;
-import raf.gymuserservice.secutiry.CheckSecurity;
-import raf.gymuserservice.service.UserService;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
-    private UserService userService;
+@RequestMapping("/manager")
+public class ManagerController {
+//    private ClientService clientService;
+    private ManagerService managerService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public ManagerController(ManagerService managerService) {
+        this.managerService = managerService;
     }
 
     @ApiOperation(value = "Get all users")
@@ -36,13 +34,19 @@ public class UserController {
                             "Multiple sort criteria are supported.")})
     @GetMapping
     @CheckSecurity(roles = {"ROLE_ADMIN"})
-    public ResponseEntity<Page<UserDto>> getAllClients(@RequestHeader("Authorization") String authorization, Pageable pageable) {
-        return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Page<UserDto>> getAllManagers(@RequestHeader("Authorization") String authorization, Pageable pageable) {
+        return new ResponseEntity<>(managerService.findAllManagers(pageable), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Login")
-    @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> loginUser(@RequestBody @Valid TokenRequestDto tokenRequestDto) throws NotFoundException {
-        return new ResponseEntity<>(userService.login(tokenRequestDto), HttpStatus.OK);
+//    @GetMapping("/{id}/discount")
+//    public ResponseEntity<DiscountDto> getDiscount(@PathVariable("id") Long id) {
+//        return new ResponseEntity<>(userService.findDiscount(id), HttpStatus.OK);
+//    }
+
+    @ApiOperation(value = "Register manager")
+    @PostMapping
+    public ResponseEntity<ManagerDto> saveManager(@RequestBody @Valid ManagerCreateDto managerCreateDto) {
+        return new ResponseEntity<>(managerService.addManager(managerCreateDto), HttpStatus.CREATED);
     }
+
 }
