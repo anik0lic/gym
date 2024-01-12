@@ -14,5 +14,5 @@ public class Manager extends User{
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
     private LocalDate startDate;
     private String gym;
-    private Boolean ban;
+    private boolean ban;
 }

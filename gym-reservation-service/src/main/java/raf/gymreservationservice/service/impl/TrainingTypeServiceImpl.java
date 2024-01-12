@@ -3,7 +3,6 @@ package raf.gymreservationservice.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import raf.gymreservationservice.domain.Gym;
 import raf.gymreservationservice.domain.TrainingType;
 import raf.gymreservationservice.dto.TrainingTypeCreateDto;
 import raf.gymreservationservice.dto.TrainingTypeDto;

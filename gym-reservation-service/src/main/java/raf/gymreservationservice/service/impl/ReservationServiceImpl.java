@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -36,14 +35,15 @@ public class ReservationServiceImpl implements ReservationService {
     private RestTemplate userServiceRestTemplate;
     private JmsTemplate jmsTemplate;
     private String incrementReservationCountDestination;
+    private String emailQueueDestination;
     private MessageHelper messageHelper;
     private Retry reservationServiceRetry;
     private Bulkhead reservationServiceBulkhead;
 
     public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper,
-                            AppointmentRepository appointmentRepository, RestTemplate userServiceRestTemplate, JmsTemplate jmsTemplate,
-                            @Value("${destination.incrementReservationCount}") String incrementReservationCountDestination, MessageHelper messageHelper,
-                            Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead) {
+                                  AppointmentRepository appointmentRepository, RestTemplate userServiceRestTemplate, JmsTemplate jmsTemplate,
+                                  @Value("${destination.incrementReservationCount}") String incrementReservationCountDestination, MessageHelper messageHelper,
+                                  Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead, @Value("${destination.sendEmails}") String emailQueueDestination) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.appointmentRepository = appointmentRepository;
@@ -53,6 +53,8 @@ public class ReservationServiceImpl implements ReservationService {
         this.messageHelper = messageHelper;
         this.reservationServiceRetry = reservationServiceRetry;
         this.reservationServiceBulkhead = reservationServiceBulkhead;
+        this.emailQueueDestination = emailQueueDestination;
+//        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void addReservation(ReservationCreateDto reservationCreateDto) {
         Appointment appointment = appointmentRepository.findById(reservationCreateDto.getAppointmentId()).get();
-        if(appointment.getCapacity() == 0){
+        if (appointment.getCapacity() == 0) {
             return;
         }
         appointment.setCapacity(appointment.getCapacity() - 1);
@@ -82,9 +84,10 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(appointment, reservationCreateDto.getUserId(), price);
         reservationRepository.save(reservation);
         jmsTemplate.convertAndSend(incrementReservationCountDestination, messageHelper.createTextMessage(new IncrementReservationCountDto(reservationCreateDto.getUserId())));
+        jmsTemplate.convertAndSend(emailQueueDestination, messageHelper.createTextMessage("aaaaa"));
     }
 
-    private DiscountDto getDiscount (Long userId) {
+    private DiscountDto getDiscount(Long userId) {
         System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for id: " + userId);
         try {
             Thread.sleep(5000);

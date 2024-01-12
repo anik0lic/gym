@@ -59,7 +59,7 @@ public class UserMapper {
         client.setRole(roleRepository.findRoleByName("ROLE_CLIENT").get());
         client.setDateOfBirth(clientCreateDto.getDateOfBirth());
         client.setNumberOfReservations(0);
-        client.setBan(false);
+        client.setBan(true);
         return client;
     }
 
@@ -74,7 +74,7 @@ public class UserMapper {
         manager.setDateOfBirth(managerCreateDto.getDateOfBirth());
         manager.setStartDate(managerCreateDto.getStartDate());
         manager.setGym(managerCreateDto.getGym());
-        manager.setBan(false);
+        manager.setBan(true);
         return manager;
     }
 }

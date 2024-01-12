@@ -39,4 +39,9 @@ public class ManagerServiceImpl implements ManagerService {
         managerRepository.save(manager);
         return userMapper.managerToManagerDto(manager);
     }
+
+    @Override
+    public Boolean verifyToken(String token) {
+        return null;
+    }
 }
