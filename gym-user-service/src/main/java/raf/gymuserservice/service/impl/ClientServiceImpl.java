@@ -8,10 +8,7 @@ import raf.gymuserservice.domain.Client;
 import raf.gymuserservice.domain.Role;
 import raf.gymuserservice.domain.User;
 import raf.gymuserservice.domain.UserStatus;
-import raf.gymuserservice.dto.ClientCreateDto;
-import raf.gymuserservice.dto.ClientDto;
-import raf.gymuserservice.dto.DiscountDto;
-import raf.gymuserservice.dto.UserDto;
+import raf.gymuserservice.dto.*;
 import raf.gymuserservice.exceptions.NotFoundException;
 import raf.gymuserservice.mapper.UserMapper;
 import raf.gymuserservice.repository.ClientRepository;
@@ -65,5 +62,12 @@ public class ClientServiceImpl implements ClientService {
         Client client = userMapper.clientCreateDtoToClient(clientCreateDto);
         clientRepository.save(client);
         return userMapper.clientToClientDto(client);
+    }
+
+    @Override
+    public void incrementReservationCount(IncrementReservationCountDto incrementReservationCountDto) {
+        Client client = (Client) clientRepository.findById(incrementReservationCountDto.getUserId()).get();
+        client.setNumberOfReservations(client.getNumberOfReservations() + 1);
+        clientRepository.save(client);
     }
 }
