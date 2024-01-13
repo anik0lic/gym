@@ -39,6 +39,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findById(Long id) {
+        User user = adminRepository.findById(id).get();
+        return userMapper.userToUserDto(user);
+    }
+
+    @Override
     public TokenResponseDto login(TokenRequestDto tokenRequestDto){
         User user = adminRepository
                 .findUserByUsernameAndPassword(tokenRequestDto.getUsername(), tokenRequestDto.getPassword())

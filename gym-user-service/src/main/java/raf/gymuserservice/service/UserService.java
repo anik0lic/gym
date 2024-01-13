@@ -7,5 +7,6 @@ import raf.gymuserservice.dto.*;
 
 public interface UserService {
     Page<UserDto> findAll(Pageable pageable);
+    UserDto findById(Long id);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

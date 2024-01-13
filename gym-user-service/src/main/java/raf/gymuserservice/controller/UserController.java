@@ -36,8 +36,14 @@ public class UserController {
                             "Multiple sort criteria are supported.")})
     @GetMapping
     @CheckSecurity(roles = {"ROLE_ADMIN"})
-    public ResponseEntity<Page<UserDto>> getAllClients(@RequestHeader("Authorization") String authorization, Pageable pageable) {
+    public ResponseEntity<Page<UserDto>> getAllUsers(@RequestHeader("Authorization") String authorization, Pageable pageable) {
         return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
+    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String authorization, Long id) {
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Login")

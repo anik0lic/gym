@@ -28,6 +28,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public AppointmentDto findById(Long id) {
+        Appointment appointment = appointmentRepository.findById(id).get();
+        return appointmentMapper.appointmentToAppointmentDto(appointment);
+    }
+
+    @Override
     public AppointmentDto add(AppointmentCreateDto appointmentCreateDto) {
         Appointment appointment = appointmentMapper.appointmentCreateDtoToAppointment(appointmentCreateDto);
         appointmentRepository.save(appointment);
