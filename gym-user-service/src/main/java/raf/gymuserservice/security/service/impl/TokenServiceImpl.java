@@ -1,6 +1,6 @@
-package raf.gymuserservice.secutiry.service.impl;
+package raf.gymuserservice.security.service.impl;
 
-import raf.gymuserservice.secutiry.service.TokenService;
+import raf.gymuserservice.security.service.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

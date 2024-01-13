@@ -1,4 +1,4 @@
-package raf.gymuserservice.secutiry;
+package raf.gymuserservice.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

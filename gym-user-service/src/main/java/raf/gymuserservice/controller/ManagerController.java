@@ -2,7 +2,7 @@ package raf.gymuserservice.controller;
 
 import io.swagger.annotations.ApiOperation;
 import raf.gymuserservice.dto.*;
-import raf.gymuserservice.secutiry.CheckSecurity;
+import raf.gymuserservice.security.CheckSecurity;
 import raf.gymuserservice.service.ManagerService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

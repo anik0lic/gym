@@ -1,6 +1,5 @@
-package raf.gymuserservice.secutiry;
+package raf.gymnotificationservice.security;
 
-import raf.gymuserservice.secutiry.service.TokenService;
 import io.jsonwebtoken.Claims;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import raf.gymnotificationservice.security.service.TokenService;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class SecurityAspect {
         this.tokenService = tokenService;
     }
 
-    @Around("@annotation(raf.gymuserservice.secutiry.CheckSecurity)")
+    @Around("@annotation(raf.gymnotificationservice.security.CheckSecurity)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         //Get method signature
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();

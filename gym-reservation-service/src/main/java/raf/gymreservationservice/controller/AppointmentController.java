@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.gymreservationservice.dto.AppointmentCreateDto;
 import raf.gymreservationservice.dto.AppointmentDto;
-import raf.gymreservationservice.secutiry.CheckSecurity;
+import raf.gymreservationservice.security.CheckSecurity;
 import raf.gymreservationservice.service.AppointmentService;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -41,7 +41,7 @@ public class AppointmentController {
 
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_USER", "ROLE_MANAGER"})
-    public ResponseEntity<AppointmentDto> getAppointment(@RequestHeader("Authorization") String authorization, Long id){
+    public ResponseEntity<AppointmentDto> getAppointment(@RequestHeader("Authorization") String authorization, @PathVariable Long id){
         return new ResponseEntity<>(appointmentService.findById(id), HttpStatus.OK);
     }
 

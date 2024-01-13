@@ -21,11 +21,11 @@ public class EmailListener {
         this.emailService = emailService;
     }
 
-    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
-    public void confirmationMail(Message message) throws JMSException {
-        UserDto user = messageHelper.getMessage(message, UserDto.class);
-        emailService.sendSimpleMessage(user.getEmail(), "Confirmation Email", getEmailMessage(user.getFirstName(), "http://localhost:8080", "12345"));
-    }
+//    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
+//    public void confirmationMail(Message message) throws JMSException {
+//        UserDto user = messageHelper.getMessage(message, UserDto.class);
+//        emailService.sendSimpleMessage(user.getEmail(), "Confirmation Email", getEmailMessage(user.getFirstName(), "http://localhost:8080", "12345"));
+//    }
 
 //    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
 //    public void addOrder(Message message) {

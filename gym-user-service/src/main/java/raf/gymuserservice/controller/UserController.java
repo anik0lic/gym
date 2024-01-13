@@ -3,7 +3,6 @@ package raf.gymuserservice.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import raf.gymuserservice.dto.TokenRequestDto;
 import raf.gymuserservice.dto.TokenResponseDto;
 import raf.gymuserservice.dto.UserDto;
-import raf.gymuserservice.secutiry.CheckSecurity;
+import raf.gymuserservice.security.CheckSecurity;
 import raf.gymuserservice.service.UserService;
 
 import javax.validation.Valid;
@@ -42,7 +41,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
-    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String authorization, Long id) {
+    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String authorization, @PathVariable Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
