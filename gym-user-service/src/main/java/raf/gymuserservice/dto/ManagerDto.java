@@ -14,6 +14,5 @@ public class ManagerDto {
     private String firstName;
     private String lastName;
     private String username;
-    private LocalDate startDate;
     private String gym;
 }

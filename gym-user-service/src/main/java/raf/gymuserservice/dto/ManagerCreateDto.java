@@ -25,8 +25,6 @@ public class ManagerCreateDto {
     private String password;
     @NotNull
     private LocalDate dateOfBirth;
-    @NotNull
-    private LocalDate startDate;
     @NotBlank
     private String gym;
 }

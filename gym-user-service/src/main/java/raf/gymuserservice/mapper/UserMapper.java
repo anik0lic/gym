@@ -44,7 +44,6 @@ public class UserMapper {
         managerDto.setFirstName(manager.getFirstName());
         managerDto.setLastName(manager.getLastName());
         managerDto.setUsername(manager.getUsername());
-        managerDto.setStartDate(manager.getStartDate());
         managerDto.setGym(manager.getGym());
         return managerDto;
     }
@@ -72,7 +71,6 @@ public class UserMapper {
         manager.setPassword(managerCreateDto.getPassword());
         manager.setRole(roleRepository.findRoleByName("ROLE_MANAGER").get());
         manager.setDateOfBirth(managerCreateDto.getDateOfBirth());
-        manager.setStartDate(managerCreateDto.getStartDate());
         manager.setGym(managerCreateDto.getGym());
         manager.setBan(true);
         return manager;
