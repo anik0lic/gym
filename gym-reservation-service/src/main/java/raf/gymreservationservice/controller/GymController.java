@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.gymreservationservice.dto.GymCreateDto;
 import raf.gymreservationservice.dto.GymDto;
-import raf.gymreservationservice.secutiry.CheckSecurity;
+import raf.gymreservationservice.security.CheckSecurity;
 import raf.gymreservationservice.service.GymService;
 import springfox.documentation.annotations.ApiIgnore;
 

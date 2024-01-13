@@ -1,4 +1,4 @@
-package raf.gymreservationservice.secutiry.service;
+package raf.gymnotificationservice.security.service;
 
 import io.jsonwebtoken.Claims;
 
