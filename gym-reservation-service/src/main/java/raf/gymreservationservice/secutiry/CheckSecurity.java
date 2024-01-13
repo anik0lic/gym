@@ -1,4 +1,4 @@
-package raf.gymreservationservice.security;
+package raf.gymreservationservice.secutiry;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -85,8 +85,8 @@ public class ClientServiceImpl implements ClientService {
         Confirmation confirmation = new Confirmation(client);
         confirmationRepository.save(confirmation);
 
-        ActivationDto activationDto = new ActivationDto(client.getEmail(), client.getFirstName(), client.getLastName(), confirmation.getToken());
-        jmsTemplate.convertAndSend(emailQueueDestination, messageHelper.createTextMessage(activationDto));
+        //salje se mejl
+        jmsTemplate.convertAndSend(emailQueueDestination, messageHelper.createTextMessage(client));
 
         return userMapper.clientToClientDto(client);
     }

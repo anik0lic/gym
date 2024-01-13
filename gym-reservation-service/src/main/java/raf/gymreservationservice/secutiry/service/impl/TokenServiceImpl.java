@@ -1,11 +1,11 @@
-package raf.gymnotificationservice.security.service.impl;
+package raf.gymreservationservice.secutiry.service.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import raf.gymnotificationservice.security.service.TokenService;
+import raf.gymreservationservice.secutiry.service.TokenService;
 
 @Service
 public class TokenServiceImpl implements TokenService {

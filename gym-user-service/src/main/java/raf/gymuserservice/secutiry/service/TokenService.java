@@ -1,4 +1,4 @@
-package raf.gymuserservice.security.service;
+package raf.gymuserservice.secutiry.service;
 
 import io.jsonwebtoken.Claims;
 

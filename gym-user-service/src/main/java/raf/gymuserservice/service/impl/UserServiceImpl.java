@@ -1,14 +1,18 @@
 package raf.gymuserservice.service.impl;
 
+import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import raf.gymuserservice.domain.Client;
+import raf.gymuserservice.domain.Confirmation;
+import raf.gymuserservice.domain.Manager;
 import raf.gymuserservice.domain.User;
 import raf.gymuserservice.dto.*;
 import raf.gymuserservice.mapper.UserMapper;
 import raf.gymuserservice.repository.*;
-import raf.gymuserservice.security.service.TokenService;
+import raf.gymuserservice.secutiry.service.TokenService;
 import raf.gymuserservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

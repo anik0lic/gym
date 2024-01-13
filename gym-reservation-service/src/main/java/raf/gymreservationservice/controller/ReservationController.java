@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import raf.gymreservationservice.dto.GymTrainingDto;
 import raf.gymreservationservice.dto.ReservationCreateDto;
 import raf.gymreservationservice.dto.ReservationDto;
-import raf.gymreservationservice.security.CheckSecurity;
+import raf.gymreservationservice.secutiry.CheckSecurity;
 import raf.gymreservationservice.service.ReservationService;
 import springfox.documentation.annotations.ApiIgnore;
 

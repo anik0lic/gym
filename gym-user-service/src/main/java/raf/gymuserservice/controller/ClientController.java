@@ -3,6 +3,7 @@ package raf.gymuserservice.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import raf.gymuserservice.dto.ClientCreateDto;
 import raf.gymuserservice.dto.ClientDto;
 import raf.gymuserservice.dto.DiscountDto;
 import raf.gymuserservice.dto.UserDto;
-import raf.gymuserservice.security.CheckSecurity;
+import raf.gymuserservice.secutiry.CheckSecurity;
 import raf.gymuserservice.service.ClientService;
 
 import javax.validation.Valid;
