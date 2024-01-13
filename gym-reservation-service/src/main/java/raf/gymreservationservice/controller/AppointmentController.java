@@ -34,13 +34,13 @@ public class AppointmentController {
                             "Default sort order is ascending. " +
                             "Multiple sort criteria are supported.")})
     @GetMapping
-    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_USER", "ROLE_MANAGER"})
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
     public ResponseEntity<Page<AppointmentDto>> getAll(@RequestHeader("Authorization") String authorization, @ApiIgnore Pageable pageable){
         return new ResponseEntity<>(appointmentService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_USER", "ROLE_MANAGER"})
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
     public ResponseEntity<AppointmentDto> getAppointment(@RequestHeader("Authorization") String authorization, @PathVariable Long id){
         return new ResponseEntity<>(appointmentService.findById(id), HttpStatus.OK);
     }
