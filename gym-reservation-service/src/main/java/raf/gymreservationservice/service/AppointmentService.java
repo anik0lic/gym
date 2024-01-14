@@ -5,9 +5,13 @@ import org.springframework.data.domain.Pageable;
 import raf.gymreservationservice.dto.AppointmentCreateDto;
 import raf.gymreservationservice.dto.AppointmentDto;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface AppointmentService {
-    Page<AppointmentDto> findAll(Pageable pageable);
+    List<AppointmentDto> findAll();
     AppointmentDto findById(Long id);
+    Optional<AppointmentDto> findByGymId(Long id);
     AppointmentDto add(AppointmentCreateDto appointmentCreateDto);
     void deleteById(Long id);
 }

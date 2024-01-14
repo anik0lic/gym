@@ -2,6 +2,7 @@ package raf.gymreservationservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Setter
 public class Appointment {
     @Id
@@ -23,4 +25,12 @@ public class Appointment {
     @ManyToOne
     private GymTraining gymTraining;
     private Integer capacity;
+
+    public Appointment(LocalDate date, String startTime, String endTime, GymTraining gymTraining, Integer capacity) {
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.gymTraining = gymTraining;
+        this.capacity = capacity;
+    }
 }

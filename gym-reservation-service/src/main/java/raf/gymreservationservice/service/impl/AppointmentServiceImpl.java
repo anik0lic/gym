@@ -11,6 +11,11 @@ import raf.gymreservationservice.mapper.AppointmentMapper;
 import raf.gymreservationservice.repository.AppointmentRepository;
 import raf.gymreservationservice.service.AppointmentService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentRepository appointmentRepository;
@@ -22,15 +27,28 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Page<AppointmentDto> findAll(Pageable pageable) {
-        return appointmentRepository.findAll(pageable)
-                .map(appointmentMapper::appointmentToAppointmentDto);
-    }
+    public List<AppointmentDto> findAll() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        List<AppointmentDto> list = new ArrayList<>();
 
+        for(Appointment a : appointments){
+            list.add(appointmentMapper.appointmentToAppointmentDto(a));
+        }
+        return list;
+    }
     @Override
     public AppointmentDto findById(Long id) {
         Appointment appointment = appointmentRepository.findById(id).get();
         return appointmentMapper.appointmentToAppointmentDto(appointment);
+    }
+
+    @Override
+    public Optional<AppointmentDto> findByGymId(Long id) {
+        LocalDate now = LocalDate.now();
+        LocalDate fiveDaysLater = now.plusDays(5);
+
+        return appointmentRepository.findAppointmentsByGymIdAndNextFiveDays(id, now, fiveDaysLater)
+                .map(appointmentMapper::appointmentToAppointmentDto);
     }
 
     @Override

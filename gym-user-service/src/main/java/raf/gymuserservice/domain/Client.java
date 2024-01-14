@@ -14,6 +14,7 @@ public class Client extends User{
     private Integer numberOfReservations;
     private boolean ban;
 
+
     @Override
     public String toString() {
         return "Client{" +

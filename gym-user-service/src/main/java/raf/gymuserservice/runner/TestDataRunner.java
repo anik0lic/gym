@@ -74,7 +74,7 @@ public class TestDataRunner implements CommandLineRunner {
         manager.setDateOfBirth(LocalDate.parse("02/03/1981", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         manager.setRole(roleManager);
         manager.setStartDate(LocalDate.parse("10/07/1999", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        manager.setGym("Sala01");
+        manager.setGym("Gym01");
         managerRepository.save(manager);
     }
 }

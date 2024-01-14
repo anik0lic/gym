@@ -3,6 +3,7 @@ package raf.gymreservationservice.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import raf.gymreservationservice.domain.Appointment;
 import raf.gymreservationservice.domain.Gym;
 import raf.gymreservationservice.dto.GymCreateDto;
 import raf.gymreservationservice.dto.GymDto;
@@ -24,6 +25,12 @@ public class GymServiceImpl implements GymService {
     public Page<GymDto> findAll(Pageable pageable) {
         return gymRepository.findAll(pageable)
                 .map(gymMapper::gymToGymDto);
+    }
+
+    @Override
+    public GymDto findById(Long id) {
+        Gym gym = gymRepository.findById(id).get();
+        return gymMapper.gymToGymDto(gym);
     }
 
     @Override

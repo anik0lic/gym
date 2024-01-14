@@ -1,6 +1,7 @@
 package raf.gymreservationservice.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Setter
 public class GymTraining {
     @Id
@@ -19,4 +21,10 @@ public class GymTraining {
     @ManyToOne
     private TrainingType trainingType;
     private BigDecimal price;
+
+    public GymTraining(Gym gym, TrainingType trainingType, BigDecimal price) {
+        this.gym = gym;
+        this.trainingType = trainingType;
+        this.price = price;
+    }
 }
