@@ -37,7 +37,7 @@ public class AppointmentController {
 //                            "Multiple sort criteria are supported.")})
     @GetMapping
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
-    public ResponseEntity<List<AppointmentDto>> getAll(@RequestHeader("Authorization") String authorization){
+    public ResponseEntity<Optional<AppointmentDto>> getAll(@RequestHeader("Authorization") String authorization){
         return new ResponseEntity<>(appointmentService.findAll(), HttpStatus.OK);
     }
 
@@ -49,8 +49,8 @@ public class AppointmentController {
 
     @GetMapping("/gym/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
-    public ResponseEntity<Optional<AppointmentDto>> getAppointmentsByGymID(@RequestHeader("Authorization") String authorization, @PathVariable Long gymId){
-        return new ResponseEntity<>(appointmentService.findByGymId(gymId), HttpStatus.OK);
+    public ResponseEntity<Optional<AppointmentDto>> getAppointmentsByGymID(@RequestHeader("Authorization") String authorization, @PathVariable Long id){
+        return new ResponseEntity<>(appointmentService.findByGymId(id), HttpStatus.OK);
     }
 
     @PostMapping

@@ -27,14 +27,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDto> findAll() {
-        List<Appointment> appointments = appointmentRepository.findAll();
-        List<AppointmentDto> list = new ArrayList<>();
+    public Optional<AppointmentDto> findAll() {
+        LocalDate now = LocalDate.now();
+        LocalDate fiveDaysLater = now.plusDays(5);
 
-        for(Appointment a : appointments){
-            list.add(appointmentMapper.appointmentToAppointmentDto(a));
-        }
-        return list;
+        return appointmentRepository.findAppointmentsForNextFiveDays(now, fiveDaysLater)
+                .map(appointmentMapper::appointmentToAppointmentDto);
     }
     @Override
     public AppointmentDto findById(Long id) {
@@ -44,10 +42,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Optional<AppointmentDto> findByGymId(Long id) {
-        LocalDate now = LocalDate.now();
-        LocalDate fiveDaysLater = now.plusDays(5);
-
-        return appointmentRepository.findAppointmentsByGymIdAndNextFiveDays(id, now, fiveDaysLater)
+        return appointmentRepository.findAppointmentsByGymTrainingGymId(id)
                 .map(appointmentMapper::appointmentToAppointmentDto);
     }
 

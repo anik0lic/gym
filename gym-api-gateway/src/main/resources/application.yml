@@ -1,0 +1,12 @@
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 212000
+            strategy: THREAD
+
+ribbon:
+  readTimeout: 60000
+  connection-timeout: 60000
