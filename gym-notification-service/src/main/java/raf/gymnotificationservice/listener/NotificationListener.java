@@ -22,22 +22,33 @@ public class NotificationListener {
         this.notificationService = notificationService;
     }
 
-    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
+    @JmsListener(destination = "${destination.sendConfirmationEmail}", concurrency = "5-10")
     public void confirmationMail(Message message) throws JMSException, InterruptedException {
         ActivationDto activationDto = messageHelper.getMessage(message, ActivationDto.class);
         notificationService.sendActivationEmail(activationDto);
     }
 
-//    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
-//    public void passwordResetMail(Message message) throws JMSException {
-//        UserDto user = messageHelper.getMessage(message, UserDto.class);
-//        notificationService.sendPasswordResetEmail(user);
-//    }
+    @JmsListener(destination = "${destination.sendPasswordEmail}", concurrency = "5-10")
+    public void passwordResetMail(Message message) throws JMSException {
+        UserDto user = messageHelper.getMessage(message, UserDto.class);
+        notificationService.sendPasswordResetEmail(user);
+    }
 
-    //nekako oba mejla da se posalju
-//    @JmsListener(destination = "${destination.sendEmails}", concurrency = "5-10")
-//    public void successfulReservationMail(Message message) throws JMSException {
-//        UserDto user = messageHelper.getMessage(message, UserDto.class);
+    @JmsListener(destination = "${destination.sendReservationEmail}", concurrency = "5-10")
+    public void successfulReservationMail(Message message) throws JMSException {
+        UserDto user = messageHelper.getMessage(message, UserDto.class);
 //        notificationService.sendSuccessfulReservationNotification(user);
-//    }
+    }
+
+    @JmsListener(destination = "${destination.sendCancellationEmail}", concurrency = "5-10")
+    public void cancellationMail(Message message) throws JMSException {
+        UserDto user = messageHelper.getMessage(message, UserDto.class);
+//        notificationService.sendCancellationNotification(user);
+    }
+
+    @JmsListener(destination = "${destination.sendRemainderEmail}", concurrency = "5-10")
+    public void remainderMail(Message message) throws JMSException {
+        UserDto user = messageHelper.getMessage(message, UserDto.class);
+//        notificationService.sendCancellationNotification(user);
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raf.gymuserservice.domain.User;
 import raf.gymuserservice.dto.*;
+import raf.gymuserservice.exceptions.NotFoundException;
 import raf.gymuserservice.mapper.UserMapper;
 import raf.gymuserservice.repository.*;
 import raf.gymuserservice.security.service.TokenService;
@@ -38,6 +39,26 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(Long id) {
         User user = adminRepository.findById(id).get();
         return userMapper.userToUserDto(user);
+    }
+
+    @Override
+    public UserDto update(Long id, UserDto userDto) {
+        User user = adminRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id: %d not found.", id)));
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setUsername(userDto.getUsername());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        return userMapper.userToUserDto(adminRepository.save(user));
+    }
+
+    @Override
+    public UserDto ban(Long id, boolean ban) {
+        User user = adminRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id: %d not found.", id)));
+        user.setBan(ban);
+        return userMapper.userToUserDto(adminRepository.save(user));
     }
 
     @Override

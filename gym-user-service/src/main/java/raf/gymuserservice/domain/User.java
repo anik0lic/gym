@@ -24,4 +24,5 @@ public class User {
     private LocalDate dateOfBirth;
     @ManyToOne(optional = false)
     private Role role;
+    private boolean ban;
 }

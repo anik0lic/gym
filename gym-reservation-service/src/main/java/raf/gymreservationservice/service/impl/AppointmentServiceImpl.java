@@ -30,7 +30,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Optional<AppointmentDto> findAll() {
         LocalDate now = LocalDate.now();
         LocalDate fiveDaysLater = now.plusDays(5);
-
+        //problem neki
         return appointmentRepository.findAppointmentsForNextFiveDays(now, fiveDaysLater)
                 .map(appointmentMapper::appointmentToAppointmentDto);
     }

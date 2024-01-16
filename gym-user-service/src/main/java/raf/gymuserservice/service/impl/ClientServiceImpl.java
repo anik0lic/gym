@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
 
     public ClientServiceImpl(ClientRepository clientRepository, UserStatusRepository userStatusRepository, RoleRepository roleRepository,
                              ConfirmationRepository confirmationRepository, UserMapper userMapper, JmsTemplate jmsTemplate, MessageHelper messageHelper,
-                             @Value("${destination.sendEmails}") String emailQueueDestination) {
+                             @Value("${destination.sendConfirmationEmail}") String emailQueueDestination) {
         this.clientRepository = clientRepository;
         this.userStatusRepository = userStatusRepository;
         this.roleRepository = roleRepository;

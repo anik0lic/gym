@@ -41,8 +41,22 @@ public class UserController {
 
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
-    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String authorization, @PathVariable Long id) {
+    public ResponseEntity<UserDto> getUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
+    public ResponseEntity<UserDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,
+                                              @RequestBody @Valid UserDto userDto) {
+        return new ResponseEntity<>(userService.update(id, userDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/ban/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<UserDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,
+                                              @RequestBody @Valid boolean ban) {
+        return new ResponseEntity<>(userService.ban(id, ban), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Login")

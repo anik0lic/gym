@@ -23,6 +23,8 @@ public class UserMapper {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setUsername(user.getUsername());
+        userDto.setDateOfBirth(user.getDateOfBirth());
+        userDto.setBan(user.isBan());
         return userDto;
     }
 

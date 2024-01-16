@@ -16,5 +16,4 @@ public class Manager extends User{
     @CreatedDate
     private LocalDate startDate;
     private String gym;
-    private boolean ban;
 }

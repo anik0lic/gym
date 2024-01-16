@@ -35,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
     private RestTemplate userServiceRestTemplate;
     private JmsTemplate jmsTemplate;
     private String incrementReservationCountDestination;
-//    private String emailQueueDestination;
+    private String emailResQueueDestination;
     private MessageHelper messageHelper;
     private Retry reservationServiceRetry;
     private Bulkhead reservationServiceBulkhead;
@@ -43,7 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper,
                                   AppointmentRepository appointmentRepository, RestTemplate userServiceRestTemplate, JmsTemplate jmsTemplate,
                                   @Value("${destination.incrementReservationCount}") String incrementReservationCountDestination, MessageHelper messageHelper,
-                                  Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead) {
+                                  Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead, @Value("${destination.sendReservationEmail}") String emailResQueueDestination) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.appointmentRepository = appointmentRepository;
@@ -53,8 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
         this.messageHelper = messageHelper;
         this.reservationServiceRetry = reservationServiceRetry;
         this.reservationServiceBulkhead = reservationServiceBulkhead;
-//        this.emailQueueDestination = emailQueueDestination;
-//        this.objectMapper = objectMapper;
+        this.emailResQueueDestination = emailResQueueDestination;
     }
 
     @Override
@@ -84,7 +83,8 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(appointment, reservationCreateDto.getUserId(), price);
         reservationRepository.save(reservation);
         jmsTemplate.convertAndSend(incrementReservationCountDestination, messageHelper.createTextMessage(new IncrementReservationCountDto(reservationCreateDto.getUserId())));
-//        jmsTemplate.convertAndSend(emailQueueDestination, messageHelper.createTextMessage("aaaaa"));
+        //stavi da discount vraca userdto posto nam treba za slanje mejla
+//        jmsTemplate.convertAndSend(emailResQueueDestination, messageHelper.createTextMessage("aaaaa"));
     }
 
     private DiscountDto getDiscount(Long userId) {
