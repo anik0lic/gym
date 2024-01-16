@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import raf.gymuserservice.domain.Client;
+import raf.gymuserservice.domain.Confirmation;
 import raf.gymuserservice.domain.User;
 import raf.gymuserservice.dto.*;
 import raf.gymuserservice.exceptions.NotFoundException;
@@ -72,5 +74,17 @@ public class UserServiceImpl implements UserService {
         claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
         return new TokenResponseDto(tokenService.generate(claims));
+    }
+
+    @Override
+    public Long verifyToken(String token) {
+        Confirmation confirmation = confirmationRepository.findByToken(token);
+        Client client = (Client) adminRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
+
+        client.setBan(false);
+
+        adminRepository.save(client);
+        confirmationRepository.delete(confirmation);
+        return client.getId();
     }
 }

@@ -97,16 +97,4 @@ public class ClientServiceImpl implements ClientService {
         client.setNumberOfReservations(client.getNumberOfReservations() + 1);
         clientRepository.save(client);
     }
-
-    @Override
-    public Long verifyToken(String token) {
-        Confirmation confirmation = confirmationRepository.findByToken(token);
-        Client client = (Client) clientRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
-
-        client.setBan(false);
-
-        clientRepository.save(client);
-        confirmationRepository.delete(confirmation);
-        return client.getId();
-    }
 }

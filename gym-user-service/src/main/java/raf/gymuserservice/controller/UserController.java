@@ -45,6 +45,12 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/confirm-account")
+    public ResponseEntity<UserDto> confirmAccount(@RequestParam("token") String token) {
+        Long id = userService.verifyToken(token);
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
     public ResponseEntity<UserDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,

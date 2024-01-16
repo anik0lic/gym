@@ -40,12 +40,6 @@ public class ClientController {
         return new ResponseEntity<>(clientService.findAllClients(pageable), HttpStatus.OK);
     }
 
-    @GetMapping("/confirm-account")
-    public ResponseEntity<UserDto> confirmAccount(@RequestHeader("token") String token) {
-        Long id = clientService.verifyToken(token);
-        return new ResponseEntity<>(clientService.findClientByID(id), HttpStatus.OK);
-    }
-
     @GetMapping("/{id}/discount")
     public ResponseEntity<DiscountDto> getDiscount(@PathVariable("id") Long id) {
         return new ResponseEntity<>(clientService.findDiscount(id), HttpStatus.OK);

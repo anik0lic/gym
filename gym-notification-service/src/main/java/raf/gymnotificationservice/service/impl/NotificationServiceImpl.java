@@ -37,7 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendActivationEmail(ActivationDto activationDto) throws InterruptedException {
         String content = "Hello " + activationDto.getFirstName() + ",\n\nYour new account has been created. Please click the link below to verify your account. \n\n" +
-                "http://localhost:8083/gym-user-service/api/client/confirm-account?token=" + activationDto.getToken();
+                "http://localhost:8083/gym-user-service/api/user/confirm-account?token=" + activationDto.getToken();
 
         Notification notification = notificationMapper.activationDtoToNotification(activationDto, "actication", content);
         notificationRepository.save(notification);

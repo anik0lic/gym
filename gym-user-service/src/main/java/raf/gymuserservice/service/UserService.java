@@ -11,4 +11,5 @@ public interface UserService {
     UserDto update(Long id, UserDto userDto);
     UserDto ban(Long id, boolean ban);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
+    Long verifyToken(String token);
 }

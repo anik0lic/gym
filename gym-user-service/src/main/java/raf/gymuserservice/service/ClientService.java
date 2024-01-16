@@ -10,5 +10,4 @@ public interface ClientService {
     DiscountDto findDiscount(Long id);
     ClientDto addClient(ClientCreateDto clientCreateDto);
     void incrementReservationCount(IncrementReservationCountDto incrementReservationCountDto);
-    Long verifyToken(String token);
 }

@@ -10,5 +10,4 @@ import raf.gymuserservice.dto.UserDto;
 public interface ManagerService {
     Page<UserDto> findAllManagers(Pageable pageable);
     ManagerDto addManager(ManagerCreateDto managerCreateDto);
-    Boolean verifyToken(String token);
 }
