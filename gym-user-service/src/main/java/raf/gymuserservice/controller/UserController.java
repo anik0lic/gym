@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.gymuserservice.dto.TokenRequestDto;
 import raf.gymuserservice.dto.TokenResponseDto;
+import raf.gymuserservice.dto.UpdateDto;
 import raf.gymuserservice.dto.UserDto;
 import raf.gymuserservice.security.CheckSecurity;
 import raf.gymuserservice.service.UserService;
@@ -53,9 +54,9 @@ public class UserController {
 
     @PutMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
-    public ResponseEntity<UserDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,
-                                              @RequestBody @Valid UserDto userDto) {
-        return new ResponseEntity<>(userService.update(id, userDto), HttpStatus.OK);
+    public ResponseEntity<UpdateDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,
+                                                @RequestBody @Valid UpdateDto updateDto) {
+        return new ResponseEntity<>(userService.update(id, updateDto), HttpStatus.OK);
     }
 
     @PutMapping("/ban/{id}")
@@ -63,6 +64,13 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id,
                                               @RequestBody @Valid boolean ban) {
         return new ResponseEntity<>(userService.ban(id, ban), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<?> delete (@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Login")

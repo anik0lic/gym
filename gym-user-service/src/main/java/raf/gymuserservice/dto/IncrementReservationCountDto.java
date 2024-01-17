@@ -9,7 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class IncrementReservationCountDto {
     private Long userId;
-    public IncrementReservationCountDto(Long userId){
+    private String gymName;
+
+    public IncrementReservationCountDto(Long userId, String gymName) {
         this.userId = userId;
+        this.gymName = gymName;
     }
 }

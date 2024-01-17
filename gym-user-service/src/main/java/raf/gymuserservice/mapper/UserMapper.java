@@ -46,6 +46,7 @@ public class UserMapper {
         managerDto.setFirstName(manager.getFirstName());
         managerDto.setLastName(manager.getLastName());
         managerDto.setUsername(manager.getUsername());
+        managerDto.setDateOfBirth(manager.getDateOfBirth());
         managerDto.setGym(manager.getGym());
         return managerDto;
     }
@@ -76,5 +77,15 @@ public class UserMapper {
         manager.setGym(managerCreateDto.getGym());
         manager.setBan(true);
         return manager;
+    }
+
+    public UpdateDto userToUpdateDto(User user){
+        UpdateDto updateDto = new UpdateDto();
+        updateDto.setEmail(user.getEmail());
+        updateDto.setFirstName(user.getFirstName());
+        updateDto.setLastName(user.getLastName());
+        updateDto.setUsername(user.getUsername());
+        updateDto.setDateOfBirth(user.getDateOfBirth());
+        return updateDto;
     }
 }

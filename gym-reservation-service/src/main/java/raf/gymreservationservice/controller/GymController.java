@@ -39,6 +39,12 @@ public class GymController {
         return new ResponseEntity<>(gymService.findAll(pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/name")
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
+    public ResponseEntity<GymDto> findByGymName(@RequestHeader("Authorization") String authorization, @RequestParam("name") String name){
+        return new ResponseEntity<>(gymService.findGymByName(name), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
     public ResponseEntity<GymDto> getGym(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){

@@ -8,10 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import raf.gymnotificationservice.domain.Notification;
-import raf.gymnotificationservice.dto.ActivationDto;
-import raf.gymnotificationservice.dto.NotificationDto;
-import raf.gymnotificationservice.dto.ReservationNotificationDto;
-import raf.gymnotificationservice.dto.UserDto;
+import raf.gymnotificationservice.dto.*;
 import raf.gymnotificationservice.mapper.NotificationMapper;
 import raf.gymnotificationservice.repository.NotificationRepository;
 import raf.gymnotificationservice.service.NotificationService;
@@ -71,14 +68,44 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendPasswordResetEmail(UserDto userDto) {
+    public void sendPasswordResetEmail(UserDto userDto) throws InterruptedException {
+        String content = "Hello " + userDto.getFirstName() + ",\n\nPlease click the link below to reset your password. \n\n" +
+                "http://localhost:8084/reset-password/" + userDto.getId();
 
+        Notification notification = new Notification("password", userDto.getEmail(), content);
+        notificationRepository.save(notification);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(userDto.getEmail());
+        message.setSubject("Reset your Password");
+        message.setFrom(fromEmail);
+        message.setText(content);
+        int maxRetries = 3;
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                mailSender.send(message);
+                System.out.println("email sent successfully");
+                return;
+            } catch (MailAuthenticationException e){
+                System.err.println("Authentication failed. Waiting before the next attempt.");
+                try {
+                    Thread.sleep(5000); // 5 seconds delay
+                } catch (InterruptedException interruptedException){
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        try {
+            mailSender.send(message);
+        } catch (MailAuthenticationException e){
+            System.err.println("Authentication failed. Waiting before the next attempt.");
+            Thread.sleep(5000); // 5 seconds delay
+        }
     }
 
     @Override
-    public void sendSuccessfulReservationNotification(ReservationNotificationDto reservationNotificationDto) {
-        String contentClient = "Hello " + reservationNotificationDto.getClientFirstName() + ",\n\nYou successfully booked your appointment. \n\n" +
-                "See you soon";
+    public void sendSuccessfulReservationNotification(ReservationNotificationDto reservationNotificationDto) throws InterruptedException {
+        String contentClient = "Hello " + reservationNotificationDto.getClientFirstName() + ",\n\nYou successfully booked your appointment. \n\n" + "See you soon";
         String contentManager = "Hello " + reservationNotificationDto.getManagerMail() + ",\n\nYou have new reservation.";
 
         List<Notification> notifications = notificationMapper.reservationNotifDtoToNotification(reservationNotificationDto, "successful-reservation", contentClient,"new-reservation", contentManager);
@@ -90,19 +117,81 @@ public class NotificationServiceImpl implements NotificationService {
         message.setSubject("Successful Reservation");
         message.setFrom(fromEmail);
         message.setText(contentClient);
-        mailSender.send(message);
 
         SimpleMailMessage message2 = new SimpleMailMessage();
         message.setTo(reservationNotificationDto.getManagerMail());
         message.setSubject("New Reservation");
         message.setFrom(fromEmail);
         message.setText(contentManager);
-        mailSender.send(message2);
+
+        int maxRetries = 3;
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                mailSender.send(message);
+                mailSender.send(message2);
+                System.out.println("email sent successfully");
+                return;
+            } catch (MailAuthenticationException e){
+                System.err.println("Authentication failed. Waiting before the next attempt.");
+                try {
+                    Thread.sleep(5000); // 5 seconds delay
+                } catch (InterruptedException interruptedException){
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        try {
+            mailSender.send(message);
+        } catch (MailAuthenticationException e){
+            System.err.println("Authentication failed. Waiting before the next attempt.");
+            Thread.sleep(5000); // 5 seconds delay
+        }
     }
 
     @Override
-    public void sendCancellationNotification(ReservationNotificationDto reservationNotificationDto) {
+    public void sendAppointmentCancellationNotification(NotificationCancellationDto notificationCancellationDto) {
+        String contentClient = "Training has been cancelled.";
+        String contentManager = "You deleted appointment.";
 
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(notificationCancellationDto.getManagerEmail());
+        message.setSubject("Deleted Appointment");
+        message.setFrom(fromEmail);
+        message.setText(contentManager);
+        mailSender.send(message);
+        notificationRepository.save(new Notification("appointment-cancellation", notificationCancellationDto.getManagerEmail(), contentManager));
+
+        for(String email: notificationCancellationDto.getClientEmails()){
+            SimpleMailMessage message2 = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("Training Cancelled");
+            message.setFrom(fromEmail);
+            message.setText(contentClient);
+            mailSender.send(message2);
+            notificationRepository.save(new Notification("appointment-cancellation", email, contentClient));
+        }
+    }
+
+    @Override
+    public void sendReservationCancellationNotification(NotificationCancellationDto notificationCancellationDto) {
+        String contentClient = "You have deleted your reservation.";
+        String contentManager = "Client has canceled his reservation";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(notificationCancellationDto.getManagerEmail());
+        message.setSubject("Deleted Reservation");
+        message.setFrom(fromEmail);
+        message.setText(contentManager);
+        mailSender.send(message);
+        notificationRepository.save(new Notification("reservation-cancellation", notificationCancellationDto.getManagerEmail(), contentManager));
+
+        SimpleMailMessage message2 = new SimpleMailMessage();
+        message.setTo(notificationCancellationDto.getClientEmails().get(0));
+        message.setSubject("Deleted Reservation");
+        message.setFrom(fromEmail);
+        message.setText(contentClient);
+        mailSender.send(message2);
+        notificationRepository.save(new Notification("reservation-cancellation", notificationCancellationDto.getClientEmails().get(0), contentClient));
     }
 
     @Override
@@ -114,16 +203,5 @@ public class NotificationServiceImpl implements NotificationService {
     public Page<NotificationDto> getAllNotificationsForAdmin(Pageable pageable) {
         return notificationRepository.findAll(pageable)
                 .map(notificationMapper::notificationToNotificationDto);
-    }
-
-    @Override
-    public Page<NotificationDto> getClientNotifications(Long clientId, Pageable pageable) {
-        //nadji klijenta
-        return null;
-    }
-
-    @Override
-    public Page<NotificationDto> getManagerNotifications(Long managerId, Pageable pageable) {
-        return null;
     }
 }

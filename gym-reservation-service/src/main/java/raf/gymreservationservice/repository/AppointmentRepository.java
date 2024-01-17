@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    Optional<Appointment> findAppointmentsByGymTrainingGymId(Long id);
-    @Query("SELECT a FROM Appointment a WHERE a.date BETWEEN :startDate AND :endDate")
-    Optional<Appointment> findAppointmentsForNextFiveDays(
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate
-    );
+    List<Appointment> findAppointmentsByGymTrainingGymId(Long id);
+    List<Appointment> findAppointmentsByDateBefore(LocalDate date);
 }

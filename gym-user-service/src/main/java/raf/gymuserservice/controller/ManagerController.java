@@ -37,6 +37,12 @@ public class ManagerController {
         return new ResponseEntity<>(managerService.findAllManagers(pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CLIENT"})
+    public ResponseEntity<ManagerDto> getManager(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id) {
+        return new ResponseEntity<>(managerService.findById(id), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "Register manager")
     @PostMapping
     public ResponseEntity<ManagerDto> saveManager(@RequestBody @Valid ManagerCreateDto managerCreateDto) {

@@ -11,37 +11,47 @@ import raf.gymuserservice.dto.*;
 import raf.gymuserservice.exceptions.NotFoundException;
 import raf.gymuserservice.listener.MessageHelper;
 import raf.gymuserservice.mapper.UserMapper;
-import raf.gymuserservice.repository.ClientRepository;
-import raf.gymuserservice.repository.ConfirmationRepository;
-import raf.gymuserservice.repository.RoleRepository;
-import raf.gymuserservice.repository.UserStatusRepository;
+import raf.gymuserservice.repository.*;
 import raf.gymuserservice.service.ClientService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
+    private ManagerRepository managerRepository;
     private UserStatusRepository userStatusRepository;
     private RoleRepository roleRepository;
     private ConfirmationRepository confirmationRepository;
     private UserMapper userMapper;
     private JmsTemplate jmsTemplate;
     private MessageHelper messageHelper;
-    private String emailQueueDestination;
+    private String emailCnfQueueDestination;
+    private String emailResQueueDestination;
+    private String emailCnclQueueDestination;
+    private String emailResCnclQueueDestination;
 
-    public ClientServiceImpl(ClientRepository clientRepository, UserStatusRepository userStatusRepository, RoleRepository roleRepository,
+    public ClientServiceImpl(ClientRepository clientRepository, ManagerRepository managerRepository, UserStatusRepository userStatusRepository, RoleRepository roleRepository,
                              ConfirmationRepository confirmationRepository, UserMapper userMapper, JmsTemplate jmsTemplate, MessageHelper messageHelper,
-                             @Value("${destination.sendConfirmationEmail}") String emailQueueDestination) {
+                             @Value("${destination.sendConfirmationEmail}") String emailCnfQueueDestination,
+                             @Value("${destination.sendReservationEmail}") String emailResQueueDestination,
+                             @Value("${destination.sendCancellationEmail}") String emailCnclQueueDestination,
+                             @Value("${destination.sendResCancellationEmail}") String emailResCnclQueueDestination) {
         this.clientRepository = clientRepository;
+        this.managerRepository = managerRepository;
         this.userStatusRepository = userStatusRepository;
         this.roleRepository = roleRepository;
         this.confirmationRepository = confirmationRepository;
         this.userMapper = userMapper;
         this.jmsTemplate = jmsTemplate;
         this.messageHelper = messageHelper;
-        this.emailQueueDestination = emailQueueDestination;
+        this.emailCnfQueueDestination = emailCnfQueueDestination;
+        this.emailResQueueDestination = emailResQueueDestination;
+        this.emailCnclQueueDestination = emailCnclQueueDestination;
+        this.emailResCnclQueueDestination = emailResCnclQueueDestination;
     }
 
     @Override
@@ -86,7 +96,7 @@ public class ClientServiceImpl implements ClientService {
         confirmationRepository.save(confirmation);
 
         ActivationDto activationDto = new ActivationDto(client.getEmail(), client.getFirstName(), client.getLastName(), confirmation.getToken());
-        jmsTemplate.convertAndSend(emailQueueDestination, messageHelper.createTextMessage(activationDto));
+        jmsTemplate.convertAndSend(emailCnfQueueDestination, messageHelper.createTextMessage(activationDto));
 
         return userMapper.clientToClientDto(client);
     }
@@ -94,7 +104,39 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void incrementReservationCount(IncrementReservationCountDto incrementReservationCountDto) {
         Client client = (Client) clientRepository.findById(incrementReservationCountDto.getUserId()).get();
+        Manager manager = managerRepository.findByGymName(incrementReservationCountDto.getGymName());
+        System.out.println(manager);
+
         client.setNumberOfReservations(client.getNumberOfReservations() + 1);
+
+        ReservationNotificationDto reservationNotificationDto = new ReservationNotificationDto(client.getEmail(), client.getFirstName(), client.getLastName(), manager.getEmail(), manager.getFirstName(), manager.getLastName());
+        jmsTemplate.convertAndSend(emailResQueueDestination, messageHelper.createTextMessage(reservationNotificationDto));
         clientRepository.save(client);
+    }
+
+    @Override
+    public void appointmentCancellation(CancellationDto cancellationDto) {
+        Manager manager = managerRepository.findByGymName(cancellationDto.getGymName());
+        List<String> clientEmails = new ArrayList<>();
+
+        for(Long id: cancellationDto.getUserIds()){
+            Client client = (Client) clientRepository.findById(id).get();
+            clientEmails.add(client.getEmail());
+            client.setNumberOfReservations(client.getNumberOfReservations() - 1);
+        }
+
+        NotificationCancellationDto notificationCancellationDto = new NotificationCancellationDto(clientEmails, manager.getEmail());
+        jmsTemplate.convertAndSend(emailCnclQueueDestination, messageHelper.createTextMessage(notificationCancellationDto));
+    }
+
+    @Override
+    public void reservationCancellation(CancellationDto cancellationDto) {
+        Manager manager = managerRepository.findByGymName(cancellationDto.getGymName());
+        Client client = (Client) clientRepository.findById(cancellationDto.getUserIds().get(0)).get();
+        client.setNumberOfReservations(client.getNumberOfReservations() - 1);
+
+        NotificationCancellationDto notificationCancellationDto = new NotificationCancellationDto(List.of(client.getEmail()), manager.getEmail());
+
+        jmsTemplate.convertAndSend(emailResCnclQueueDestination, messageHelper.createTextMessage(notificationCancellationDto));
     }
 }

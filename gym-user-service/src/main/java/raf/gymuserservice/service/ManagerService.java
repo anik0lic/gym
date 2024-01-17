@@ -9,5 +9,6 @@ import raf.gymuserservice.dto.UserDto;
 
 public interface ManagerService {
     Page<UserDto> findAllManagers(Pageable pageable);
+    ManagerDto findById(Long id);
     ManagerDto addManager(ManagerCreateDto managerCreateDto);
 }

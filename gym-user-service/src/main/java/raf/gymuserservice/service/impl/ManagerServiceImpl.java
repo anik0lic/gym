@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raf.gymuserservice.domain.Client;
 import raf.gymuserservice.domain.Manager;
+import raf.gymuserservice.domain.User;
 import raf.gymuserservice.dto.ManagerCreateDto;
 import raf.gymuserservice.dto.ManagerDto;
 import raf.gymuserservice.dto.UserDto;
@@ -31,6 +32,12 @@ public class ManagerServiceImpl implements ManagerService {
     public Page<UserDto> findAllManagers(Pageable pageable) {
         return managerRepository.findUserByRole(roleRepository.findRoleByName("ROLE_MANAGER").get(), pageable)
                 .map(userMapper::userToUserDto);
+    }
+
+    @Override
+    public ManagerDto findById(Long id) {
+        Manager manager = (Manager) managerRepository.findById(id).get();
+        return userMapper.managerToManagerDto(manager);
     }
 
     @Override

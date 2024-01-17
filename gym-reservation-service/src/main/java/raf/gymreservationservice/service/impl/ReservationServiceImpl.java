@@ -15,6 +15,7 @@ import raf.gymreservationservice.configuration.userservice.dto.DiscountDto;
 import raf.gymreservationservice.configuration.userservice.dto.IncrementReservationCountDto;
 import raf.gymreservationservice.domain.Appointment;
 import raf.gymreservationservice.domain.Reservation;
+import raf.gymreservationservice.dto.CancellationDto;
 import raf.gymreservationservice.dto.ReservationCreateDto;
 import raf.gymreservationservice.dto.ReservationDto;
 import raf.gymreservationservice.exceptions.NotFoundException;
@@ -25,6 +26,7 @@ import raf.gymreservationservice.repository.ReservationRepository;
 import raf.gymreservationservice.service.ReservationService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -35,25 +37,25 @@ public class ReservationServiceImpl implements ReservationService {
     private RestTemplate userServiceRestTemplate;
     private JmsTemplate jmsTemplate;
     private String incrementReservationCountDestination;
-    private String emailResQueueDestination;
+    private String reservationCancellationQueue;
     private MessageHelper messageHelper;
     private Retry reservationServiceRetry;
     private Bulkhead reservationServiceBulkhead;
 
     public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper,
                                   AppointmentRepository appointmentRepository, RestTemplate userServiceRestTemplate, JmsTemplate jmsTemplate,
-                                  @Value("${destination.incrementReservationCount}") String incrementReservationCountDestination, MessageHelper messageHelper,
-                                  Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead, @Value("${destination.sendReservationEmail}") String emailResQueueDestination) {
+                                  @Value("${destination.incrementReservationCount}") String incrementReservationCountDestination, @Value("${destination.reservationCancel}") String reservationCancellationQueue, MessageHelper messageHelper,
+                                  Retry reservationServiceRetry, Bulkhead reservationServiceBulkhead) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.appointmentRepository = appointmentRepository;
         this.userServiceRestTemplate = userServiceRestTemplate;
         this.jmsTemplate = jmsTemplate;
         this.incrementReservationCountDestination = incrementReservationCountDestination;
+        this.reservationCancellationQueue = reservationCancellationQueue;
         this.messageHelper = messageHelper;
         this.reservationServiceRetry = reservationServiceRetry;
         this.reservationServiceBulkhead = reservationServiceBulkhead;
-        this.emailResQueueDestination = emailResQueueDestination;
     }
 
     @Override
@@ -74,17 +76,12 @@ public class ReservationServiceImpl implements ReservationService {
         DiscountDto discountDto = Bulkhead.decorateSupplier(reservationServiceBulkhead,
                 () -> Retry.decorateSupplier(reservationServiceRetry, () -> getDiscount(reservationCreateDto.getUserId())).get()).get();
 
-//        ResponseEntity<DiscountDto> discountDtoResponseEntity = userServiceRestTemplate.exchange("/client/" +
-//                reservationCreateDto.getUserId() + "/discount", HttpMethod.GET, null, DiscountDto.class);
-
         BigDecimal price = appointment.getGymTraining().getPrice().divide(BigDecimal.valueOf(100))
                 .multiply(BigDecimal.valueOf(100 - Objects.requireNonNull(discountDto.getDiscount())));
 
         Reservation reservation = new Reservation(appointment, reservationCreateDto.getUserId(), price);
         reservationRepository.save(reservation);
-        jmsTemplate.convertAndSend(incrementReservationCountDestination, messageHelper.createTextMessage(new IncrementReservationCountDto(reservationCreateDto.getUserId())));
-        //stavi da discount vraca userdto posto nam treba za slanje mejla
-//        jmsTemplate.convertAndSend(emailResQueueDestination, messageHelper.createTextMessage("aaaaa"));
+        jmsTemplate.convertAndSend(incrementReservationCountDestination, messageHelper.createTextMessage(new IncrementReservationCountDto(reservationCreateDto.getUserId(), appointment.getGymTraining().getGym().getName())));
     }
 
     private DiscountDto getDiscount(Long userId) {
@@ -105,6 +102,8 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteById(Long id) {
         Reservation reservation = reservationRepository.findById(id).get();
         reservation.getAppointment().setCapacity(reservation.getAppointment().getCapacity() + 1);
+        CancellationDto cancellationDto = new CancellationDto(List.of(reservation.getUserId()), reservation.getAppointment().getGymTraining().getGym().getName());
+        jmsTemplate.convertAndSend(reservationCancellationQueue, messageHelper.createTextMessage(cancellationDto));
         reservationRepository.deleteById(id);
     }
 }

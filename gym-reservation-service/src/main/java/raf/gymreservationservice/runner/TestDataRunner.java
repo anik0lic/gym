@@ -36,10 +36,10 @@ public class TestDataRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         //Insert gyms
-        Gym gym1 = new Gym("Gym 01", "First Gym for Group trainings", 5, 12);
-        Gym gym2 = new Gym("Gym 02", "Second Gym for Individual trainings", 2, 1);
-        Gym gym3 = new Gym("Gym 03", "Third Gym for Group trainings", 3, 10);
-        Gym gym4 = new Gym("Gym 04", "Fourth Gym for Individual trainings", 1, 1);
+        Gym gym1 = new Gym("Gym01", "First Gym for Group trainings", 5, 12);
+        Gym gym2 = new Gym("Gym02", "Second Gym for Individual trainings", 2, 1);
+        Gym gym3 = new Gym("Gym03", "Third Gym for Group trainings", 3, 10);
+        Gym gym4 = new Gym("Gym04", "Fourth Gym for Individual trainings", 1, 1);
         gymRepository.save(gym1);
         gymRepository.save(gym2);
         gymRepository.save(gym3);
@@ -79,6 +79,7 @@ public class TestDataRunner implements CommandLineRunner {
         appointmentRepository.save(new Appointment(LocalDate.parse("19/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "22:00", "23:00", gt2, gt2.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "09:00", "10:00", gt1, gt1.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "12:00", "13:00", gt2, gt2.getGym().getCapacity()));
+        appointmentRepository.save(new Appointment(LocalDate.parse("30/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "12:00", "13:00", gt2, gt2.getGym().getCapacity()));
         //gym2
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "09:00", "10:00", gt3, gt3.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "12:00", "13:00", gt3, gt3.getGym().getCapacity()));
@@ -87,6 +88,7 @@ public class TestDataRunner implements CommandLineRunner {
         appointmentRepository.save(new Appointment(LocalDate.parse("19/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "19:00", "20:00", gt3, gt3.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "08:00", "09:00", gt3, gt3.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "11:00", "12:00", gt3, gt3.getGym().getCapacity()));
+        appointmentRepository.save(new Appointment(LocalDate.parse("01/02/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "11:00", "12:00", gt3, gt3.getGym().getCapacity()));
         //gym3
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "10:00", "11:00", gt4, gt4.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "17:00", "18:00", gt4, gt4.getGym().getCapacity()));
@@ -95,6 +97,7 @@ public class TestDataRunner implements CommandLineRunner {
         appointmentRepository.save(new Appointment(LocalDate.parse("19/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "14:00", "15:00", gt4, gt4.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "15:00", "16:00", gt4, gt4.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "21:00", "22:00", gt4, gt4.getGym().getCapacity()));
+        appointmentRepository.save(new Appointment(LocalDate.parse("31/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "21:00", "22:00", gt4, gt4.getGym().getCapacity()));
         //gym4
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "09:00", "10:00", gt5, gt5.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("17/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "19:00", "20:00", gt6, gt6.getGym().getCapacity()));
@@ -103,5 +106,6 @@ public class TestDataRunner implements CommandLineRunner {
         appointmentRepository.save(new Appointment(LocalDate.parse("19/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "18:00", "19:00", gt6, gt6.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "09:00", "10:00", gt5, gt5.getGym().getCapacity()));
         appointmentRepository.save(new Appointment(LocalDate.parse("20/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "20:00", "21:00", gt5, gt5.getGym().getCapacity()));
+        appointmentRepository.save(new Appointment(LocalDate.parse("20/02/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")), "20:00", "21:00", gt5, gt5.getGym().getCapacity()));
     }
 }

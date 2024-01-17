@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.domain.Pageable;
+import raf.gymuserservice.domain.Manager;
 import raf.gymuserservice.domain.Role;
 import raf.gymuserservice.domain.User;
 

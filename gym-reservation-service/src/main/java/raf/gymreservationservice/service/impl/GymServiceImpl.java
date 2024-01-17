@@ -41,6 +41,12 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
+    public GymDto findGymByName(String name) {
+        Gym gym = gymRepository.findGymByName(name);
+        return gymMapper.gymToGymDto(gym);
+    }
+
+    @Override
     public void deleteById(Long id) {
         gymRepository.deleteById(id);
     }

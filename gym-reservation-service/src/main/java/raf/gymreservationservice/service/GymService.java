@@ -10,5 +10,6 @@ public interface GymService {
     Page<GymDto> findAll(Pageable pageable);
     GymDto findById(Long id);
     GymDto add(GymCreateDto gymCreateDto);
+    GymDto findGymByName(String name);
     void deleteById(Long id);
 }
