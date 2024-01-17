@@ -65,10 +65,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void addReservation(ReservationCreateDto reservationCreateDto) {
+    public ReservationDto addReservation(ReservationCreateDto reservationCreateDto) {
         Appointment appointment = appointmentRepository.findById(reservationCreateDto.getAppointmentId()).get();
         if (appointment.getCapacity() == 0) {
-            return;
+            throw new RuntimeException("Appointment is full!");
         }
         appointment.setCapacity(appointment.getCapacity() - 1);
         appointmentRepository.save(appointment);
@@ -82,6 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(appointment, reservationCreateDto.getUserId(), price);
         reservationRepository.save(reservation);
         jmsTemplate.convertAndSend(incrementReservationCountDestination, messageHelper.createTextMessage(new IncrementReservationCountDto(reservationCreateDto.getUserId(), appointment.getGymTraining().getGym().getName())));
+        return reservationMapper.reservationToReservationDto(reservation);
     }
 
     private DiscountDto getDiscount(Long userId) {

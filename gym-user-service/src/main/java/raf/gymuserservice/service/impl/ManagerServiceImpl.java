@@ -42,6 +42,10 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public ManagerDto addManager(ManagerCreateDto managerCreateDto) {
+        if(managerRepository.existsByEmail(managerCreateDto.getEmail())){
+            throw new RuntimeException("User already exists!");
+        }
+
         Manager manager = userMapper.managerCreateDtoToManager(managerCreateDto);
         managerRepository.save(manager);
         return userMapper.managerToManagerDto(manager);

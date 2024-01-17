@@ -8,6 +8,6 @@ import raf.gymreservationservice.dto.ReservationDto;
 
 public interface ReservationService {
     Page<ReservationDto> findAll(Pageable pageable);
-    void addReservation(ReservationCreateDto reservationCreateDto);
+    ReservationDto addReservation(ReservationCreateDto reservationCreateDto);
     void deleteById(Long id);
 }

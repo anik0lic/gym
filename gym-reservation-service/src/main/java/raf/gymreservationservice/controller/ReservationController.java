@@ -40,10 +40,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT"})
-    public ResponseEntity<Void> addReservation(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ReservationCreateDto reservationCreateDto) {
-        reservationService.addReservation(reservationCreateDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_CLIENT", "ROLE_MANAGER"})
+    public ResponseEntity<ReservationDto> addReservation(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ReservationCreateDto reservationCreateDto) {
+        return new ResponseEntity<>(reservationService.addReservation(reservationCreateDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

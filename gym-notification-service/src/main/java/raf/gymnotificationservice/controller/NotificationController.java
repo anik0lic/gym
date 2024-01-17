@@ -21,7 +21,7 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping
     @CheckSecurity(roles = {"ROLE_ADMIN"})
     public ResponseEntity<Page<NotificationDto>> getAllNotifications(@RequestHeader("Authorization") String authorization, Pageable pageable) {
         return new ResponseEntity<>(notificationService.getAllNotificationsForAdmin(pageable), HttpStatus.OK);

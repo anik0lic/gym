@@ -158,8 +158,8 @@ public class NotificationServiceImpl implements NotificationService {
         message.setSubject("Deleted Appointment");
         message.setFrom(fromEmail);
         message.setText(contentManager);
-        mailSender.send(message);
         notificationRepository.save(new Notification("appointment-cancellation", notificationCancellationDto.getManagerEmail(), contentManager));
+        mailSender.send(message);
 
         for(String email: notificationCancellationDto.getClientEmails()){
             SimpleMailMessage message2 = new SimpleMailMessage();
@@ -167,8 +167,8 @@ public class NotificationServiceImpl implements NotificationService {
             message.setSubject("Training Cancelled");
             message.setFrom(fromEmail);
             message.setText(contentClient);
-            mailSender.send(message2);
             notificationRepository.save(new Notification("appointment-cancellation", email, contentClient));
+            mailSender.send(message2);
         }
     }
 
@@ -182,16 +182,16 @@ public class NotificationServiceImpl implements NotificationService {
         message.setSubject("Deleted Reservation");
         message.setFrom(fromEmail);
         message.setText(contentManager);
-        mailSender.send(message);
         notificationRepository.save(new Notification("reservation-cancellation", notificationCancellationDto.getManagerEmail(), contentManager));
+        mailSender.send(message);
 
         SimpleMailMessage message2 = new SimpleMailMessage();
         message.setTo(notificationCancellationDto.getClientEmails().get(0));
         message.setSubject("Deleted Reservation");
         message.setFrom(fromEmail);
         message.setText(contentClient);
-        mailSender.send(message2);
         notificationRepository.save(new Notification("reservation-cancellation", notificationCancellationDto.getClientEmails().get(0), contentClient));
+        mailSender.send(message2);
     }
 
     @Override

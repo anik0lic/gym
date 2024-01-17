@@ -1,9 +1,8 @@
-package raf.gymreservationservice.configuration;
+package raf.gymnotificationservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import raf.gymreservationservice.controller.GymController;
-import raf.gymreservationservice.controller.ReservationController;
+import raf.gymnotificationservice.controller.NotificationController;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -21,7 +20,7 @@ public class SwaggerConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
-                .select().apis(RequestHandlerSelectors.basePackage(ReservationController.class.getPackage().getName()))
+                .select().apis(RequestHandlerSelectors.basePackage(NotificationController.class.getPackage().getName()))
                 .build()
                 .apiInfo(metaData());
     }
